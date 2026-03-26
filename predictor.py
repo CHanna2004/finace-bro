@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
-FORECAST_HORIZONS = [1, 5, 10, 20, 30]   # trading days ahead
+FORECAST_HORIZONS = [1, 5, 10, 20, 30, 60, 90, 120, 165]   # trading days ahead
 
 
 def _build_targets(feat: pd.DataFrame, horizon: int) -> pd.Series:
@@ -85,7 +85,7 @@ def train_model(
 def predict_futures(
     historical_df: pd.DataFrame,
     current_price: float,
-    horizons: list[int] = FORECAST_HORIZONS,
+    horizons: List[int] = FORECAST_HORIZONS,
     model_type: str = "rf",
     current_features: Optional[dict] = None,
 ) -> pd.DataFrame:
@@ -143,7 +143,7 @@ def predict_futures(
 def ensemble_predict(
     historical_df: pd.DataFrame,
     current_price: float,
-    horizons: list[int] = FORECAST_HORIZONS,
+    horizons: List[int] = FORECAST_HORIZONS,
 ) -> pd.DataFrame:
     """
     Run both RF and GB models and return the averaged prediction.

@@ -29,12 +29,20 @@ app = dash.Dash(
 DARK_BG    = "#0d0d1a"
 PANEL_BG   = "#13132a"
 BORDER     = "#2a2a4a"
-TEXT       = "#c8c8e8"
-MUTED      = "#6666aa"
+TEXT       = "#e8e8f8"
+MUTED      = "#9999cc"
+LABEL      = "#ffffff"
 ACCENT     = "#4488ff"
 GREEN      = "#33cc88"
 RED        = "#ff4466"
 YELLOW     = "#ffcc44"
+
+SIDEBAR_FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif"
+LABEL_STYLE  = {"fontSize": "13px", "fontWeight": "600", "color": LABEL,
+                "letterSpacing": "0.5px", "fontFamily": SIDEBAR_FONT,
+                "marginBottom": "6px", "display": "block"}
+RADIO_LABEL  = {"display": "block", "marginTop": "8px", "fontSize": "14px",
+                "color": TEXT, "fontFamily": SIDEBAR_FONT, "cursor": "pointer"}
 
 COMMODITY_OPTIONS = [
     {"label": f"{meta['name']} ({key})", "value": key}
@@ -57,14 +65,16 @@ def card(children, style=None):
 
 # ── Layout ────────────────────────────────────────────────────────────────────
 
-app.layout = html.Div(style={"background": DARK_BG, "minHeight": "100vh", "fontFamily": "monospace, monospace", "color": TEXT}, children=[
+SLIDER_MARK = {"color": TEXT, "fontSize": "12px", "fontFamily": SIDEBAR_FONT}
+
+app.layout = html.Div(style={"background": DARK_BG, "minHeight": "100vh", "fontFamily": SIDEBAR_FONT, "color": TEXT}, children=[
 
     # Header
     html.Div(style={"background": "#0a0a18", "borderBottom": f"1px solid {BORDER}", "padding": "16px 32px", "display": "flex", "alignItems": "center", "gap": "16px"}, children=[
         html.Span("📈", style={"fontSize": "28px"}),
         html.Div([
-            html.H1("FinaceBro", style={"margin": 0, "fontSize": "22px", "color": "#eeeeff", "letterSpacing": "2px"}),
-            html.P("Commodity Futures Simulation & Prediction", style={"margin": 0, "fontSize": "11px", "color": MUTED}),
+            html.H1("FinaceBro", style={"margin": 0, "fontSize": "22px", "color": "#ffffff", "letterSpacing": "2px", "fontFamily": SIDEBAR_FONT}),
+            html.P("Commodity Futures Simulation & Prediction", style={"margin": 0, "fontSize": "12px", "color": MUTED, "fontFamily": SIDEBAR_FONT}),
         ]),
     ]),
 
@@ -72,86 +82,97 @@ app.layout = html.Div(style={"background": DARK_BG, "minHeight": "100vh", "fontF
     html.Div(style={"display": "flex", "gap": "20px", "padding": "20px 32px"}, children=[
 
         # ── Left sidebar: controls ─────────────────────────────────────────
-        html.Div(style={"width": "260px", "flexShrink": 0}, children=[
+        html.Div(style={"width": "270px", "flexShrink": 0}, children=[
             card([
-                html.Label("Commodity", style={"fontSize": "11px", "color": MUTED, "letterSpacing": "1px"}),
+                html.Label("Commodity", style=LABEL_STYLE),
                 dcc.Dropdown(
                     id="commodity",
                     options=COMMODITY_OPTIONS,
                     value="gold",
                     clearable=False,
-                    style={"background": DARK_BG, "color": TEXT, "border": f"1px solid {BORDER}", "marginTop": "6px"},
+                    style={"background": "#1a1a35", "color": "#ffffff", "border": f"1px solid {BORDER}", "marginTop": "4px", "fontSize": "14px"},
                 ),
-                html.Div(style={"height": "16px"}),
+                html.Div(style={"height": "20px", "borderBottom": f"1px solid {BORDER}", "marginBottom": "20px"}),
 
-                html.Label("MC Model", style={"fontSize": "11px", "color": MUTED, "letterSpacing": "1px"}),
+                html.Label("MC Model", style=LABEL_STYLE),
                 dcc.RadioItems(
                     id="mc-model",
                     options=[
-                        {"label": " GBM (standard)", "value": "gbm"},
-                        {"label": " Jump-Diffusion", "value": "jump_diffusion"},
+                        {"label": "  GBM (standard)", "value": "gbm"},
+                        {"label": "  Jump-Diffusion",  "value": "jump_diffusion"},
                     ],
                     value="gbm",
-                    labelStyle={"display": "block", "marginTop": "6px", "fontSize": "13px"},
+                    labelStyle=RADIO_LABEL,
                 ),
-                html.Div(style={"height": "16px"}),
+                html.Div(style={"height": "20px", "borderBottom": f"1px solid {BORDER}", "marginBottom": "20px"}),
 
-                html.Label("ML Model", style={"fontSize": "11px", "color": MUTED, "letterSpacing": "1px"}),
+                html.Label("ML Model", style=LABEL_STYLE),
                 dcc.RadioItems(
                     id="ml-model",
                     options=[
-                        {"label": " Ensemble (RF+GB)", "value": "ensemble"},
-                        {"label": " Random Forest",    "value": "rf"},
-                        {"label": " Gradient Boost",   "value": "gb"},
+                        {"label": "  Ensemble (RF + GB)", "value": "ensemble"},
+                        {"label": "  Random Forest",       "value": "rf"},
+                        {"label": "  Gradient Boost",      "value": "gb"},
                     ],
                     value="ensemble",
-                    labelStyle={"display": "block", "marginTop": "6px", "fontSize": "13px"},
+                    labelStyle=RADIO_LABEL,
                 ),
-                html.Div(style={"height": "16px"}),
+                html.Div(style={"height": "20px", "borderBottom": f"1px solid {BORDER}", "marginBottom": "20px"}),
 
-                html.Label(f"Forecast Horizon (days)", style={"fontSize": "11px", "color": MUTED, "letterSpacing": "1px"}),
-                dcc.Slider(id="forecast-days", min=5, max=90, step=5, value=30,
-                           marks={5: "5", 30: "30", 60: "60", 90: "90"},
+                # Forecast horizon — max 165 trading days ≈ mid-November from March 26
+                html.Label("Forecast Horizon", style=LABEL_STYLE),
+                html.Div(id="horizon-display", style={"fontSize": "13px", "color": MUTED, "marginBottom": "8px", "fontFamily": SIDEBAR_FONT}),
+                dcc.Slider(id="forecast-days", min=5, max=165, step=5, value=30,
+                           marks={5: {"label": "5d", "style": SLIDER_MARK},
+                                  30: {"label": "30d", "style": SLIDER_MARK},
+                                  60: {"label": "60d", "style": SLIDER_MARK},
+                                  90: {"label": "90d", "style": SLIDER_MARK},
+                                  120: {"label": "120d", "style": SLIDER_MARK},
+                                  165: {"label": "~Mid-Nov", "style": {**SLIDER_MARK, "color": YELLOW}}},
                            tooltip={"placement": "bottom", "always_visible": True}),
-                html.Div(style={"height": "16px"}),
+                html.Div(style={"height": "20px", "borderBottom": f"1px solid {BORDER}", "marginBottom": "20px"}),
 
-                html.Label("Simulations", style={"fontSize": "11px", "color": MUTED, "letterSpacing": "1px"}),
+                html.Label("Simulations", style=LABEL_STYLE),
                 dcc.Slider(id="n-sims", min=1000, max=20000, step=1000, value=5000,
-                           marks={1000: "1k", 10000: "10k", 20000: "20k"},
+                           marks={1000:  {"label": "1k",  "style": SLIDER_MARK},
+                                  5000:  {"label": "5k",  "style": SLIDER_MARK},
+                                  10000: {"label": "10k", "style": SLIDER_MARK},
+                                  20000: {"label": "20k", "style": SLIDER_MARK}},
                            tooltip={"placement": "bottom", "always_visible": True}),
-                html.Div(style={"height": "16px"}),
+                html.Div(style={"height": "20px", "borderBottom": f"1px solid {BORDER}", "marginBottom": "20px"}),
 
-                html.Label("History (years)", style={"fontSize": "11px", "color": MUTED, "letterSpacing": "1px"}),
+                html.Label("History (years)", style=LABEL_STYLE),
                 dcc.Slider(id="history-years", min=1, max=10, step=1, value=5,
-                           marks={1: "1", 5: "5", 10: "10"},
+                           marks={i: {"label": str(i), "style": SLIDER_MARK} for i in [1, 2, 3, 5, 7, 10]},
                            tooltip={"placement": "bottom", "always_visible": True}),
-                html.Div(style={"height": "16px"}),
+                html.Div(style={"height": "20px", "borderBottom": f"1px solid {BORDER}", "marginBottom": "20px"}),
 
-                html.Label("Data Source", style={"fontSize": "11px", "color": MUTED, "letterSpacing": "1px"}),
+                html.Label("Data Source", style=LABEL_STYLE),
                 dcc.RadioItems(
                     id="data-source",
                     options=[
-                        {"label": " Live (internet)", "value": "live"},
-                        {"label": " Demo (synthetic)", "value": "demo"},
+                        {"label": "  Live (internet)", "value": "live"},
+                        {"label": "  Demo (synthetic)", "value": "demo"},
                     ],
                     value="demo",
-                    labelStyle={"display": "block", "marginTop": "6px", "fontSize": "13px"},
+                    labelStyle=RADIO_LABEL,
                 ),
-                html.Div(style={"height": "20px"}),
+                html.Div(style={"height": "24px"}),
 
                 html.Button(
                     "▶  Run Simulation",
                     id="run-btn",
                     n_clicks=0,
                     style={
-                        "width": "100%", "padding": "12px",
+                        "width": "100%", "padding": "14px",
                         "background": ACCENT, "color": "#fff",
-                        "border": "none", "borderRadius": "6px",
-                        "fontSize": "14px", "fontFamily": "monospace",
-                        "cursor": "pointer", "letterSpacing": "1px",
+                        "border": "none", "borderRadius": "8px",
+                        "fontSize": "15px", "fontFamily": SIDEBAR_FONT,
+                        "fontWeight": "700", "cursor": "pointer",
+                        "letterSpacing": "0.5px",
                     },
                 ),
-                html.Div(id="status-msg", style={"marginTop": "10px", "fontSize": "11px", "color": MUTED, "textAlign": "center"}),
+                html.Div(id="status-msg", style={"marginTop": "10px", "fontSize": "13px", "color": MUTED, "textAlign": "center", "fontFamily": SIDEBAR_FONT}),
             ]),
         ]),
 
@@ -174,6 +195,18 @@ app.layout = html.Div(style={"background": DARK_BG, "minHeight": "100vh", "fontF
         ]),
     ]),
 ])
+
+
+# ── Horizon label callback ────────────────────────────────────────────────────
+
+@callback(Output("horizon-display", "children"), Input("forecast-days", "value"))
+def update_horizon_label(days):
+    from datetime import date, timedelta
+    if not days:
+        return ""
+    # Approximate calendar days from trading days (×1.4 accounts for weekends)
+    target = date.today() + timedelta(days=int(days * 1.4))
+    return f"{days} trading days  →  ~{target.strftime('%b %d, %Y')}"
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
