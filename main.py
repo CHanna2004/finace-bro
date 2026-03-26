@@ -8,6 +8,8 @@ Usage examples:
   python main.py run --commodity corn --simulations 50000 --years 10
   python main.py run --commodity gold --ml-model ensemble --save-csv
   python main.py run --commodity gold --demo          # offline / no API key needed
+  python main.py run --commodity gold --demo --plot   # show charts
+  python main.py run --commodity gold --save-chart    # save chart to file
   python main.py list
   python main.py quote --commodity silver
   python main.py quote --demo
@@ -137,6 +139,18 @@ def cmd_run(args) -> None:
     if args.save_csv:
         save_csv(sim, pred_df, commodity)
 
+    # 8. Visualize
+    if args.plot or args.save_chart:
+        from plot import plot_simulation
+        import os
+        from datetime import datetime
+        chart_path = None
+        if args.save_chart:
+            os.makedirs("output", exist_ok=True)
+            ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+            chart_path = f"output/{commodity}_chart_{ts}.png"
+        plot_simulation(sim, pred_df, commodity, live, save_path=chart_path)
+
 
 # ── Argument parser ───────────────────────────────────────────────────────────
 
@@ -195,6 +209,8 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("--save-csv", action="store_true", help="Save results to CSV files")
     r.add_argument("--refresh", action="store_true", help="Force cache refresh")
     r.add_argument("--demo", action="store_true", help="Use synthetic data (no internet required)")
+    r.add_argument("--plot", action="store_true", help="Show interactive chart window")
+    r.add_argument("--save-chart", action="store_true", help="Save chart as PNG to output/")
 
     return parser
 
