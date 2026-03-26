@@ -30,6 +30,51 @@ app = dash.Dash(
     assets_folder=_os.path.join(_HERE, "assets"),
 )
 
+# Inject CSS directly into the HTML — works on every Dash version / OS
+app.index_string = """<!DOCTYPE html>
+<html>
+<head>
+{%metas%}
+<title>{%title%}</title>
+{%favicon%}
+{%css%}
+<style>
+  * { box-sizing: border-box; }
+  body, #react-entry-point {
+    background: #0d0d1a !important;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif !important;
+    color: #e8e8f8 !important;
+    margin: 0;
+  }
+  /* Dropdown */
+  .Select-control { background-color: #1a1a35 !important; border-color: #2a2a4a !important; }
+  .Select-value-label, .Select-placeholder { color: #ffffff !important; font-size: 14px !important; }
+  .Select-menu-outer { background-color: #1a1a35 !important; border-color: #2a2a4a !important; z-index: 999 !important; }
+  .Select-option { background-color: #1a1a35 !important; color: #e8e8f8 !important; }
+  .Select-option:hover, .Select-option.is-focused { background-color: #2a2a55 !important; color: #fff !important; }
+  .Select-option.is-selected { background-color: #4488ff !important; color: #fff !important; }
+  .Select-arrow { border-top-color: #9999cc !important; }
+  /* Radio labels */
+  label { color: #e8e8f8 !important; font-family: system-ui, -apple-system, sans-serif !important; }
+  /* Slider marks */
+  .rc-slider-mark-text { color: #e8e8f8 !important; font-size: 12px !important; }
+  .rc-slider-track { background-color: #4488ff !important; }
+  .rc-slider-handle { border-color: #4488ff !important; background-color: #4488ff !important; }
+  .rc-slider-rail { background-color: #2a2a4a !important; }
+  .rc-slider-tooltip-inner { background-color: #4488ff !important; color: #fff !important; font-size: 12px !important; font-weight: 600 !important; }
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #0d0d1a; }
+  ::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #4488ff; }
+</style>
+</head>
+<body>
+{%app_entry%}
+<footer>{%config%}{%scripts%}{%renderer%}</footer>
+</body>
+</html>"""
+
 DARK_BG    = "#0d0d1a"
 PANEL_BG   = "#13132a"
 BORDER     = "#2a2a4a"
