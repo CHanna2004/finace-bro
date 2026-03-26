@@ -1,0 +1,162 @@
+/* FinaceBro — Global stylesheet, auto-loaded by Dash from assets/ */
+
+/* ── Base ─────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body, #react-entry-point {
+  background: #0d0d1a !important;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  color: #e8e8f8 !important;
+  margin: 0;
+}
+
+/* ── Dropdown ─────────────────────────────────────────────── */
+.Select-control,
+.Select-menu-outer,
+.VirtualizedSelectFocusedOption,
+.VirtualizedSelectOption {
+  background-color: #1a1a35 !important;
+  color: #ffffff !important;
+  border-color: #2a2a4a !important;
+}
+
+/* Dash 2.x / newer dropdown */
+.dash-dropdown .Select-control {
+  background-color: #1a1a35 !important;
+  border: 1px solid #2a2a4a !important;
+}
+
+.dash-dropdown .Select-value-label,
+.dash-dropdown .Select-placeholder {
+  color: #ffffff !important;
+  font-size: 14px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+.dash-dropdown .Select-arrow {
+  border-top-color: #9999cc !important;
+}
+
+.dash-dropdown .Select-menu-outer {
+  background-color: #1a1a35 !important;
+  border: 1px solid #2a2a4a !important;
+  z-index: 999 !important;
+}
+
+.dash-dropdown .Select-option {
+  background-color: #1a1a35 !important;
+  color: #e8e8f8 !important;
+  font-size: 13px !important;
+}
+
+.dash-dropdown .Select-option:hover,
+.dash-dropdown .Select-option.is-focused {
+  background-color: #2a2a55 !important;
+  color: #ffffff !important;
+}
+
+.dash-dropdown .Select-option.is-selected {
+  background-color: #4488ff !important;
+  color: #ffffff !important;
+}
+
+/* ── Radio Items ──────────────────────────────────────────── */
+.radio-items-container label,
+input[type="radio"] + label,
+.dash-radio label {
+  color: #e8e8f8 !important;
+  font-size: 14px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+/* Target all label elements inside radio containers */
+label {
+  color: #e8e8f8 !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+/* ── Sliders ──────────────────────────────────────────────── */
+.rc-slider-mark-text {
+  color: #e8e8f8 !important;
+  font-size: 12px !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+.rc-slider-track {
+  background-color: #4488ff !important;
+}
+
+.rc-slider-handle {
+  border-color: #4488ff !important;
+  background-color: #4488ff !important;
+}
+
+.rc-slider-handle:hover,
+.rc-slider-handle:active {
+  border-color: #66aaff !important;
+  background-color: #66aaff !important;
+  box-shadow: 0 0 8px rgba(68, 136, 255, 0.6) !important;
+}
+
+.rc-slider-rail {
+  background-color: #2a2a4a !important;
+}
+
+/* Tooltip bubble */
+.rc-slider-tooltip-inner {
+  background-color: #4488ff !important;
+  color: #ffffff !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+}
+
+.rc-slider-tooltip-arrow {
+  border-top-color: #4488ff !important;
+}
+
+/* ── Section labels ───────────────────────────────────────── */
+.section-label {
+  color: #ffffff !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  letter-spacing: 0.3px !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+
+/* ── Stat pills ───────────────────────────────────────────── */
+.stat-pill {
+  display: inline-block;
+  background: #0d0d1a;
+  border: 1px solid #2a2a4a;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px;
+}
+
+.stat-pill .pill-label {
+  font-size: 10px;
+  color: #9999cc;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.stat-pill .pill-value {
+  font-size: 17px;
+  font-weight: 700;
+  font-family: 'Inter', system-ui, sans-serif;
+  margin-top: 2px;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0d0d1a; }
+::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4488ff; }

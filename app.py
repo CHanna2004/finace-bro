@@ -20,10 +20,14 @@ from predictor import ensemble_predict, predict_futures, FORECAST_HORIZONS
 
 # ── App setup ─────────────────────────────────────────────────────────────────
 
+import os as _os
+_HERE = _os.path.dirname(_os.path.abspath(__file__))
+
 app = dash.Dash(
     __name__,
     title="FinaceBro — Commodity Futures",
     suppress_callback_exceptions=True,
+    assets_folder=_os.path.join(_HERE, "assets"),
 )
 
 DARK_BG    = "#0d0d1a"
