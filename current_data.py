@@ -7,7 +7,7 @@ import json
 import logging
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 import yfinance as yf
 import pandas as pd
@@ -106,7 +106,7 @@ def fetch_current_commodity(
 
 
 def fetch_multiple_current(
-    commodities: list[str],
+    commodities: List[str],
     force_refresh: bool = False,
 ) -> pd.DataFrame:
     """

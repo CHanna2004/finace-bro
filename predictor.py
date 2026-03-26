@@ -9,7 +9,7 @@ directional confidence for each forecast horizon.
 import logging
 import math
 import warnings
-from typing import Optional
+from typing import Optional, List
 
 import numpy as np
 import pandas as pd
@@ -35,7 +35,7 @@ def _build_targets(feat: pd.DataFrame, horizon: int) -> pd.Series:
     ).dropna()
 
 
-def _feature_cols(feat: pd.DataFrame) -> list[str]:
+def _feature_cols(feat: pd.DataFrame) -> List[str]:
     return [c for c in feat.columns if c != "close"]
 
 

@@ -1,8 +1,10 @@
-yfinance>=0.2.40
-pandas>=2.0.0
-numpy>=1.26.0
-scikit-learn>=1.4.0
-pyarrow>=14.0.0
-matplotlib>=3.8.0
-dash>=2.18.0
-plotly>=5.20.0
+# Compatible with Python 3.9+
+numpy>=1.24,<3
+pandas>=1.5,<3
+pyarrow>=11.0
+scikit-learn>=1.2,<2
+scipy>=1.9
+matplotlib>=3.6
+plotly>=5.13
+dash>=2.9
+yfinance>=0.2.18

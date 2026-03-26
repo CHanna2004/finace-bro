@@ -440,6 +440,37 @@ def run(n_clicks, commodity, mc_model, ml_model, forecast_days, n_sims, years, d
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    print("\n  FinaceBro starting...")
-    print("  Open: http://localhost:8050\n")
-    app.run(debug=False, host="0.0.0.0", port=8050)
+    import socket
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--port", type=int, default=8050)
+    args, _ = parser.parse_known_args()
+    port = args.port
+
+    # Check if port is already in use and find a free one
+    def port_free(p):
+        s = socket.socket()
+        try:
+            s.bind(("127.0.0.1", p))
+            s.close()
+            return True
+        except OSError:
+            return False
+
+    if not port_free(port):
+        print(f"\n  Port {port} is already in use.")
+        for p in range(port + 1, port + 20):
+            if port_free(p):
+                port = p
+                print(f"  Using port {port} instead.")
+                break
+        else:
+            print("  ERROR: No free port found in range. Kill existing processes:")
+            print(f"    lsof -ti:{args.port} | xargs kill -9")
+            raise SystemExit(1)
+
+    print(f"\n  FinaceBro starting...")
+    print(f"  Open: http://localhost:{port}")
+    print(f"  Press Ctrl+C to stop.\n")
+    app.run(debug=False, host="127.0.0.1", port=port)
